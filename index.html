@@ -3,19 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Code Explainer</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Code Explainer v2</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <h1>Code Explainer</h1>
-    
-    <textarea id="codeInput" placeholder="Paste your JavaScript code here..."></textarea>
-    <button onclick="explainCode()">Explain</button>
+    <div class="input-section">
+      <label class="input-label">Enter your JavaScript code:</label>
+      <textarea id="codeInput" placeholder="Type or paste your JavaScript code here...
 
+// Example:
+function greet(name) {
+  if (name) {
+    console.log('Hello, ' + name + '!');
+  } else {
+    console.log('Hello, World!');
+  }
+}" oninput="explainCode()"></textarea>
+      <button class="clear-btn" id="clearBtn" onclick="clearCode()">Clear</button>
+    </div>
     <div id="explanationBox">
-      <h2>Explanation:</h2>
-      <div id="output"></div>
+      <h2>Code Explanation</h2>
+      <div id="output" class="empty-state">
+        Start typing some JavaScript code above to see the explanation here!
+      </div>
+      <div id="stats" class="stats" style="display: none;">
+        <div class="stat-item">
+          <span class="stat-number" id="lineCount">0</span>
+          <span class="stat-label">Lines</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="keywordCount">0</span>
+          <span class="stat-label">Keywords</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="charCount">0</span>
+          <span class="stat-label">Characters</span>
+        </div>
+      </div>
     </div>
   </div>
 
