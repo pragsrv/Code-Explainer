@@ -3,30 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Code Explainer v2</title>
+  <title>Advanced Code Explainer</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Code Explainer</h1>
-    <div class="input-section">
-      <label class="input-label">Enter your JavaScript code:</label>
-      <textarea id="codeInput" placeholder="Type or paste your JavaScript code here...
-
-// Example:
-function greet(name) {
-  if (name) {
-    console.log('Hello, ' + name + '!');
-  } else {
-    console.log('Hello, World!');
-  }
-}" oninput="explainCode()"></textarea>
-      <button class="clear-btn" id="clearBtn" onclick="clearCode()">Clear</button>
+    <div class="header">
+      <h1>🚀 Code Explainer Pro</h1>
+      <p class="subtitle">Multi-language code analysis and explanation tool</p>
     </div>
-    <div id="explanationBox">
-      <h2>Code Explanation</h2>
-      <div id="output" class="empty-state">
-        Start typing some JavaScript code above to see the explanation here!
+
+    <div class="language-selector">
+      <button class="lang-btn active" data-lang="javascript">JavaScript</button>
+      <button class="lang-btn" data-lang="python">Python</button>
+      <button class="lang-btn" data-lang="java">Java</button>
+      <button class="lang-btn" data-lang="cpp">C++</button>
+      <button class="lang-btn" data-lang="csharp">C#</button>
+      <button class="lang-btn" data-lang="html">HTML</button>
+      <button class="lang-btn" data-lang="css">CSS</button>
+      <button class="lang-btn" data-lang="sql">SQL</button>
+    </div>
+
+    <div class="input-section">
+      <div class="input-controls">
+        <span class="input-label">Enter your code:</span>
+        <div class="control-buttons">
+          <button class="btn btn-primary" onclick="loadExample()">📝 Load Example</button>
+          <button class="btn btn-secondary" onclick="formatCode()">🎨 Format</button>
+          <button class="btn btn-danger" onclick="clearCode()">🗑️ Clear</button>
+        </div>
+      </div>
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-dots">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+          </div>
+          <span id="currentLang">JavaScript</span>
+        </div>
+        <textarea id="codeInput" placeholder="Type or paste your code here..." oninput="explainCode()"></textarea>
+      </div>
+    </div>
+
+    <div class="output-section" style="display: flex; gap: 24px; align-items: flex-start;">
+      <div class="explanation-panel" style="flex: 1 1 0; min-width: 0;">
+        <div class="panel-header">
+          <span class="panel-icon">📚</span>
+          <span>Code Explanation</span>
+        </div>
+        <div id="explanationOutput" class="empty-state">
+          Select a language and start typing code to see detailed explanations!
+        </div>
+      </div>
+      <div class="syntax-panel" style="flex: 1 1 0; min-width: 0;">
+        <div class="panel-header">
+          <span class="panel-icon">🎨</span>
+          <span>Syntax Highlighting</span>
+        </div>
+        <div id="syntaxOutput" class="syntax-highlight">
+          <div class="empty-state">Your code will appear here with syntax highlighting</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features-panel">
+      <div class="panel-header">
+        <span class="panel-icon">📊</span>
+        <span>Code Analysis</span>
       </div>
       <div id="stats" class="stats" style="display: none;">
         <div class="stat-item">
@@ -40,6 +84,44 @@ function greet(name) {
         <div class="stat-item">
           <span class="stat-number" id="charCount">0</span>
           <span class="stat-label">Characters</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="functionCount">0</span>
+          <span class="stat-label">Functions</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="commentCount">0</span>
+          <span class="stat-label">Comments</span>
+        </div>
+      </div>
+      <div class="complexity-indicator" id="complexityIndicator" style="display: none;">
+        <span>Code Complexity:</span>
+        <div class="complexity-bar">
+          <div class="complexity-fill" id="complexityFill"></div>
+        </div>
+        <span id="complexityText">Low</span>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <div class="feature-title">Smart Analysis</div>
+          <div class="feature-description">Advanced code parsing with context-aware explanations</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌈</div>
+          <div class="feature-title">Syntax Highlighting</div>
+          <div class="feature-description">Beautiful color-coded syntax for better readability</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <div class="feature-title">Multi-Language</div>
+          <div class="feature-description">Support for 8+ popular programming languages</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-title">Real-Time</div>
+          <div class="feature-description">Instant explanations as you type</div>
         </div>
       </div>
     </div>
