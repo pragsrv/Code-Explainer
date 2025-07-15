@@ -224,6 +224,8 @@ textarea {
   border: 1px solid #dee2e6;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   animation: fadeIn 0.5s ease-out;
+  /* FIXED: Allow tooltips to show outside the panel */
+  overflow: visible;
 }
 
 @keyframes fadeIn {
@@ -245,6 +247,11 @@ textarea {
   font-size: 1.2rem;
 }
 
+/* FIXED: Container for explanations to allow tooltips to show outside */
+#explanationOutput {
+  overflow: visible;
+}
+
 .code-line {
   padding: 12px 16px;
   margin: 8px 0;
@@ -254,7 +261,8 @@ textarea {
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
+  /* FIXED: Remove overflow hidden to allow tooltips to show outside */
+  overflow: visible;
 }
 
 .code-line:hover {
@@ -301,6 +309,8 @@ textarea {
   border-bottom: 2px solid #d73a49;
   transition: all 0.3s ease;
   position: relative;
+  /* FIXED: Ensure the keyword container doesn't clip tooltips */
+  overflow: visible;
 }
 
 .explanation-keyword:hover {
@@ -315,17 +325,22 @@ textarea {
   transform: translateX(-50%);
   background: #2c3e50;
   color: white;
-  padding: 10px 15px;
+  padding: 12px 16px;
   border-radius: 8px;
   font-size: 13px;
-  white-space: nowrap;
+  font-weight: normal;
+  white-space: normal;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  max-width: 250px;
-  white-space: normal;
+  /* FIXED: Higher z-index to ensure tooltip appears above everything */
+  z-index: 9999;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  max-width: 300px;
+  min-width: 200px;
+  line-height: 1.4;
+  /* FIXED: Ensure tooltip doesn't get clipped by parent containers */
+  margin-bottom: 10px;
 }
 
 .tooltip::after {
@@ -334,12 +349,33 @@ textarea {
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border: 6px solid transparent;
+  border: 8px solid transparent;
   border-top-color: #2c3e50;
 }
 
 .explanation-keyword:hover .tooltip {
   opacity: 1;
+  /* FIXED: Small delay to ensure smooth appearance */
+  transition-delay: 0.2s;
+}
+
+/* FIXED: Special handling for tooltips that might go outside viewport */
+.tooltip {
+  /* Ensure tooltip adjusts if it goes outside the right edge */
+  right: auto;
+}
+
+.explanation-keyword:nth-last-child(-n+2) .tooltip {
+  /* For keywords near the end of lines, position tooltip to the left */
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+.explanation-keyword:nth-last-child(-n+2) .tooltip::after {
+  left: auto;
+  right: 20px;
+  transform: none;
 }
 
 .empty-state {
@@ -472,4 +508,326 @@ textarea {
   .lang-btn { padding: 8px 16px; font-size: 14px; }
   .control-buttons { flex-wrap: wrap; }
   .stats { grid-template-columns: repeat(2, 1fr); }
+  
+  /* FIXED: Mobile adjustments for tooltips */
+  .tooltip {
+    max-width: 250px;
+    min-width: 150px;
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+}
+/* Dark Mode Styles */
+body.dark-mode {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+body.dark-mode .container {
+  background: rgba(45, 55, 72, 0.95);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+body.dark-mode h1 {
+  color: #e2e8f0;
+}
+
+body.dark-mode .subtitle {
+  color: #a0aec0;
+}
+
+body.dark-mode .lang-btn {
+  background: #4a5568;
+  color: #e2e8f0;
+  border-color: #718096;
+}
+
+body.dark-mode .lang-btn:hover {
+  background: #718096;
+}
+
+body.dark-mode .lang-btn.active {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+}
+
+body.dark-mode .input-label {
+  color: #e2e8f0;
+}
+
+body.dark-mode .code-header {
+  background: #2d3748;
+}
+
+body.dark-mode .explanation-panel,
+body.dark-mode .syntax-panel,
+body.dark-mode .features-panel {
+  background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+  border: 1px solid #4a5568;
+}
+
+body.dark-mode .panel-header {
+  color: #e2e8f0;
+}
+
+body.dark-mode .code-line {
+  background: rgba(74, 85, 104, 0.8);
+  border-left-color: #667eea;
+}
+
+body.dark-mode .code-line:hover {
+  background: rgba(102, 126, 234, 0.2);
+}
+
+body.dark-mode .line-number {
+  color: #a0aec0;
+}
+
+body.dark-mode .explanation-keyword {
+  color: #f56565;
+  background: rgba(245, 101, 101, 0.1);
+  border-bottom-color: #f56565;
+}
+
+body.dark-mode .stat-item {
+  background: rgba(74, 85, 104, 0.7);
+}
+
+body.dark-mode .stat-number {
+  color: #667eea;
+}
+
+body.dark-mode .stat-label {
+  color: #a0aec0;
+}
+
+body.dark-mode .feature-card {
+  background: #4a5568;
+  border: 1px solid #718096;
+}
+
+body.dark-mode .feature-title {
+  color: #e2e8f0;
+}
+
+body.dark-mode .feature-description {
+  color: #a0aec0;
+}
+
+body.dark-mode .complexity-indicator {
+  background: rgba(74, 85, 104, 0.7);
+}
+
+body.dark-mode .empty-state {
+  color: #a0aec0;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .theme-toggle {
+  background: linear-gradient(45deg, #4a5568, #2d3748);
+}
+
+/* Instruction Guide Modal */
+.guide-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+.guide-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .guide-content {
+  background: #2d3748;
+  color: #e2e8f0;
+}
+
+.guide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+body.dark-mode .guide-header {
+  border-bottom-color: #4a5568;
+}
+
+.guide-title {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin: 0;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #dc3545;
+}
+
+body.dark-mode .close-btn {
+  color: #a0aec0;
+}
+
+.guide-section {
+  margin-bottom: 25px;
+}
+
+.guide-section h3 {
+  color: #667eea;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+body.dark-mode .guide-section h3 {
+  color: #667eea;
+}
+
+.guide-section p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.guide-section ul {
+  margin-left: 20px;
+  margin-bottom: 15px;
+}
+
+.guide-section li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.feature-highlight {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 0;
+  border-left: 4px solid #667eea;
+}
+
+body.dark-mode .feature-highlight {
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+}
+
+.keyboard-shortcut {
+  display: inline-block;
+  background: #e9ecef;
+  color: #495057;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  margin: 0 2px;
+}
+
+body.dark-mode .keyboard-shortcut {
+  background: #4a5568;
+  color: #e2e8f0;
+}
+
+/* Guide Button */
+.guide-button {
+  position: fixed;
+  top: 20px;
+  right: 140px;
+  background: linear-gradient(45deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.guide-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .guide-button {
+  background: linear-gradient(45deg, #38a169, #2d3748);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .theme-toggle {
+    top: 10px;
+    right: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+  
+  .guide-button {
+    top: 10px;
+    right: 100px;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+  
+  .guide-content {
+    margin: 20px;
+    padding: 20px;
+    max-width: calc(100% - 40px);
+  }
+  
+  .guide-title {
+    font-size: 1.5rem;
+  }
 }

@@ -7,6 +7,89 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()">
+  <span id="theme-icon">🌙</span> <span id="theme-text">Dark</span>
+</button>
+
+<!-- Guide Button -->
+<button class="guide-button" onclick="openGuide()">
+  📖 Guide
+</button>
+
+<!-- Instruction Guide Modal -->
+<div id="guideModal" class="guide-modal">
+  <div class="guide-content">
+    <div class="guide-header">
+      <h2 class="guide-title">📖 User Guide</h2>
+      <button class="close-btn" onclick="closeGuide()">&times;</button>
+    </div>
+    
+    <div class="guide-section">
+      <h3>🚀 Getting Started</h3>
+      <p>Welcome to Code Explainer Pro! This tool helps you understand code by providing detailed explanations and syntax highlighting for multiple programming languages.</p>
+    </div>
+    
+    <div class="guide-section">
+      <h3>🎯 How to Use</h3>
+      <ul>
+        <li><strong>Select Language:</strong> Choose your programming language from the buttons at the top</li>
+        <li><strong>Enter Code:</strong> Type or paste your code in the text area</li>
+        <li><strong>Get Explanations:</strong> Hover over highlighted keywords to see explanations</li>
+        <li><strong>View Analytics:</strong> Check code statistics and complexity below</li>
+      </ul>
+    </div>
+    
+    <div class="guide-section">
+      <h3>✨ Key Features</h3>
+      <div class="feature-highlight">
+        <h4>📝 Multi-Language Support</h4>
+        <p>Supports JavaScript, Python, Java, C++, C#, HTML, CSS, and SQL with language-specific explanations.</p>
+      </div>
+      
+      <div class="feature-highlight">
+        <h4>🔍 Interactive Explanations</h4>
+        <p>Hover over any keyword to see detailed explanations. Keywords are highlighted in red for easy identification.</p>
+      </div>
+      
+      <div class="feature-highlight">
+        <h4>🎨 Syntax Highlighting</h4>
+        <p>Beautiful color-coded syntax highlighting makes your code easier to read and understand.</p>
+      </div>
+      
+      <div class="feature-highlight">
+        <h4>📊 Code Analytics</h4>
+        <p>View detailed statistics including line count, keywords, functions, comments, and complexity analysis.</p>
+      </div>
+    </div>
+    
+    <div class="guide-section">
+      <h3>🛠️ Available Tools</h3>
+      <ul>
+        <li><strong>📝 Load Example:</strong> Load sample code for the selected language</li>
+        <li><strong>🎨 Format:</strong> Auto-format your code with proper indentation</li>
+        <li><strong>🗑️ Clear:</strong> Clear the code editor</li>
+        <li><strong>🌙 Dark Mode:</strong> Switch between light and dark themes</li>
+      </ul>
+    </div>
+    
+    <div class="guide-section">
+      <h3>💡 Tips & Tricks</h3>
+      <ul>
+        <li>Use the <span class="keyboard-shortcut">Load Example</span> button to see how different languages work</li>
+        <li>Hover over any red-highlighted keyword for instant explanations</li>
+        <li>The complexity indicator helps you understand code difficulty</li>
+        <li>Switch languages to see how similar concepts work across different programming languages</li>
+        <li>Use the format button to clean up messy code automatically</li>
+      </ul>
+    </div>
+    
+    <div class="guide-section">
+      <h3>🎨 Theme Options</h3>
+      <p>Switch between light and dark modes using the theme toggle button in the top-right corner. Your preference will be saved for future visits.</p>
+    </div>
+  </div>
+</div>
   <div class="container">
     <div class="header">
       <h1>🚀 Code Explainer Pro</h1>

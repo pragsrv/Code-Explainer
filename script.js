@@ -514,7 +514,12 @@ LIMIT 10;`
 };
 
 // Initialize language selector
+// Update the existing DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', function() {
+  // Load saved theme
+  loadTheme();
+  
+  // Existing language selector code...
   const langButtons = document.querySelectorAll('.lang-btn');
   langButtons.forEach(btn => {
     btn.addEventListener('click', function() {
@@ -759,3 +764,79 @@ function clearCode() {
   codeInput.focus();
   explainCode();
 }
+// Dark Mode Functionality
+function toggleTheme() {
+  const body = document.body;
+  const themeIcon = document.getElementById('theme-icon');
+  const themeText = document.getElementById('theme-text');
+  
+  body.classList.toggle('dark-mode');
+  
+  if (body.classList.contains('dark-mode')) {
+    themeIcon.textContent = '☀️';
+    themeText.textContent = 'Light';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    themeIcon.textContent = '🌙';
+    themeText.textContent = 'Dark';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+// Load saved theme on page load
+function loadTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  const body = document.body;
+  const themeIcon = document.getElementById('theme-icon');
+  const themeText = document.getElementById('theme-text');
+  
+  if (savedTheme === 'dark') {
+    body.classList.add('dark-mode');
+    themeIcon.textContent = '☀️';
+    themeText.textContent = 'Light';
+  } else {
+    themeIcon.textContent = '🌙';
+    themeText.textContent = 'Dark';
+  }
+}
+
+// Guide Modal Functions
+function openGuide() {
+  const modal = document.getElementById('guideModal');
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function closeGuide() {
+  const modal = document.getElementById('guideModal');
+  modal.style.display = 'none';
+  document.body.style.overflow = 'auto'; // Re-enable scrolling
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('guideModal');
+  if (event.target === modal) {
+    closeGuide();
+  }
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(event) {
+  // Close guide with Escape key
+  if (event.key === 'Escape') {
+    closeGuide();
+  }
+  
+  // Toggle theme with Ctrl+Shift+T
+  if (event.ctrlKey && event.shiftKey && event.key === 'T') {
+    event.preventDefault();
+    toggleTheme();
+  }
+  
+  // Open guide with Ctrl+H
+  if (event.ctrlKey && event.key === 'h') {
+    event.preventDefault();
+    openGuide();
+  }
+});
