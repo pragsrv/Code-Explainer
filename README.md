@@ -4,6 +4,9 @@ Code Explainer is a web-based tool that helps users understand code in multiple 
 
 > ⚠️AI was used in creation of this project!
 
+![20250715-0257-37 7831009-ezgif com-video-to-gif-converter (1)](https://github.com/user-attachments/assets/24c2a348-719b-41c8-8ae7-008417d06f51)
+
+
 ## Features
 - 🚀 Supports JavaScript, Python, Java, C++, C#, HTML, CSS, and SQL
 - 📚 Instant code explanations for key syntax and structures
