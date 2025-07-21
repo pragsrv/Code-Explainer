@@ -554,43 +554,92 @@ function highlightAndExplain(line) {
 
 function applySyntaxHighlighting(code) {
   if (!code.trim()) return code;
-  
-  let highlighted = code;
-  
-  // Basic syntax highlighting patterns
-  const patterns = {
-    // Comments
-    comment: [
-      /\/\/.*$/gm,  // Single line comments
-      /\/\*[\s\S]*?\*\//g,  // Multi-line comments
-      /#.*$/gm,  // Python/Shell comments
-      /<!--[\s\S]*?-->/g  // HTML comments
+
+  const lang = currentLanguage;
+  let highlighted = escapeHtml(code);
+
+  // Core patterns per language
+  const syntaxPatterns = {
+    javascript: [
+      { type: "comment", regex: /\/\/.*/g },
+      { type: "comment", regex: /\/\*[\s\S]*?\*\//g },
+      { type: "string", regex: /(['"`])(?:\\[\s\S]|(?!\1)[^\\])*\1/g },
+      { type: "number", regex: /\b\d+(\.\d+)?\b/g },
+      { type: "keyword", regex: new RegExp(`\\b(${Object.keys(languageKeywords.javascript).join('|')})\\b`, 'g') }
     ],
-    // Strings
-    string: [
-      /"(?:[^"\\]|\\.)*"/g,  // Double quotes
-      /'(?:[^'\\]|\\.)*'/g,  // Single quotes
-      /`(?:[^`\\]|\\.)*`/g   // Template literals
+    python: [
+      { type: "comment", regex: /#.*/g },
+      { type: "string", regex: /(['\"]{3})([\s\S]*?)\1/g },
+      { type: "string", regex: /(['\"])(?:\\.|(?!\1).)*\1/g },
+      { type: "number", regex: /\b\d+(\.\d+)?\b/g },
+      { type: "keyword", regex: new RegExp(`\\b(${Object.keys(languageKeywords.python).join('|')})\\b`, 'g') }
     ],
-    // Numbers
-    number: [
-      /\b\d+\.?\d*\b/g
+    java: [
+      { type: "comment", regex: /\/\/.*/g },
+      { type: "comment", regex: /\/\*[\s\S]*?\*\//g },
+      { type: "string", regex: /(['"])(?:\\.|(?!\1).)*\1/g },
+      { type: "number", regex: /\b\d+(\.\d+)?\b/g },
+      { type: "keyword", regex: new RegExp(`\\b(${Object.keys(languageKeywords.java).join('|')})\\b`, 'g') }
     ],
-    // Keywords (basic - will be enhanced per language)
-    keyword: [
-      /\b(if|else|for|while|function|return|class|import|export|const|let|var|def|public|private|static|void|int|string|bool|true|false|null|undefined|SELECT|FROM|WHERE|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|JOIN|GROUP BY|ORDER BY)\b/g
+    cpp: [
+      { type: "comment", regex: /\/\/.*/g },
+      { type: "comment", regex: /\/\*[\s\S]*?\*\//g },
+      { type: "string", regex: /(['"])(?:\\.|(?!\1).)*\1/g },
+      { type: "number", regex: /\b\d+(\.\d+)?\b/g },
+      { type: "keyword", regex: new RegExp(`\\b(${Object.keys(languageKeywords.cpp).map(k=>escapeRegex(k)).join('|')})\\b`, 'g') }
+    ],
+    csharp: [
+      { type: "comment", regex: /\/\/.*/g },
+      { type: "comment", regex: /\/\*[\s\S]*?\*\//g },
+      { type: "string", regex: /(['"])(?:\\.|(?!\1).)*\1/g },
+      { type: "number", regex: /\b\d+(\.\d+)?\b/g },
+      { type: "keyword", regex: new RegExp(`\\b(${Object.keys(languageKeywords.csharp).join('|')})\\b`, 'g') }
+    ],
+    html: [
+      { type: "comment", regex: /<!--[\s\S]*?-->/g },
+      { type: "string", regex: /"[^"]*"|'[^']*'/g },
+      { type: "tag", regex: /<\/?[a-zA-Z][^>]*>/g }
+    ],
+    css: [
+      { type: "comment", regex: /\/\*[\s\S]*?\*\//g },
+      { type: "number", regex: /\b\d+(\.\d+)?\b/g },
+      { type: "selector", regex: /\.[\w-]+|#[\w-]+/g },
+      { type: "property", regex: new RegExp(`\\b(${Object.keys(languageKeywords.css).join('|')})\\b(?=\\s*:)`, 'g') },
+      { type: "value", regex: /:[^;]+(?=;)/g }
+    ],
+    sql: [
+      { type: "comment", regex: /--.*/g },
+      { type: "string", regex: /'[^']*'/g },
+      // Multi-word SQL keywords handled below
     ]
   };
-  
-  // Apply highlighting
-  for (let [type, regexes] of Object.entries(patterns)) {
-    for (let regex of regexes) {
-      highlighted = highlighted.replace(regex, `<span class="${type}">$&</span>`);
-    }
+
+  // HTML escape utility
+  function escapeHtml(str) {
+    return str.replace(/[&<>"]/g, tag => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'
+    })[tag]);
   }
-  
+  function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // Multi-word SQL and HTML tags
+  if (lang === "sql") {
+    const sqlWords = Object.keys(languageKeywords.sql).sort((a, b) => b.length - a.length).map(escapeRegex);
+    highlighted = highlighted.replace(
+      new RegExp(`\\b(${sqlWords.join('|')})\\b`, 'gi'),
+      '<span class="keyword">$1</span>'
+    );
+  }
+
+  // For all other languages/tokens, do a layered replace
+  (syntaxPatterns[lang] || []).forEach(({type, regex}) => {
+    highlighted = highlighted.replace(regex, match => `<span class="${type}">${match}</span>`);
+  });
   return highlighted;
 }
+
 
 function calculateComplexity(code) {
   if (!code.trim()) return 0;
@@ -698,7 +747,8 @@ function explainCode() {
   document.getElementById("commentCount").textContent = commentCount;
   
   // Calculate and display complexity
-  const complexity = calculateComplexity(code);
+  const codeForComplexity = removeComments(code, currentLanguage);
+  const complexity = calculateComplexity(codeForComplexity);
   const complexityPercentage = (complexity / 20) * 100;
   const complexityFill = document.getElementById("complexityFill");
   const complexityText = document.getElementById("complexityText");
@@ -840,3 +890,11 @@ document.addEventListener('keydown', function(event) {
     openGuide();
   }
 });
+function removeComments(code, lang = currentLanguage) {
+  if (lang === "python") return code.replace(/#.*$/gm, "");
+  if (lang === "sql") return code.replace(/--.*$/gm, "");
+  if (lang === "html") return code.replace(/<!--[\s\S]*?-->/g, "");
+  // For C-style:
+  return code.replace(/\/\/.*$/gm, "")
+             .replace(/\/\*[\s\S]*?\*\//g, "");
+}
